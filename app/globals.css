@@ -1681,3 +1681,54 @@ html.sudo .ln-good { background: rgba(0, 255, 65, 0.07); }
   .article { padding: 60px 20px 90px; }
   .incident-stats { grid-template-columns: 1fr; }
 }
+
+/* ============================================================
+   Homepage (Portfolio design spec) — scoped to the new landing page.
+   Case-study pages keep using the legacy classes above.
+   ============================================================ */
+
+@layer components {
+  .home-eyebrow {
+    @apply font-plexmono text-xs uppercase tracking-[3px] text-cyan;
+  }
+
+  .glass-card {
+    @apply relative overflow-hidden rounded-[22px] border border-white/[0.08] backdrop-blur-2xl;
+    background: linear-gradient(165deg, rgba(22, 23, 24, 0.6), rgba(10, 10, 11, 0.5));
+    box-shadow: 0 20px 60px -32px rgba(0, 0, 0, 0.8);
+  }
+
+  .tag-pill {
+    @apply font-plexmono text-[11px] px-2.5 py-[5px] rounded-full border border-white/10 text-[#a4a8ac] h-fit;
+  }
+
+  .skill-pill {
+    @apply font-plexmono text-[12.5px] px-3.5 py-2 rounded-full border border-white/10 text-[#babfc4] bg-white/[0.02];
+  }
+
+  .skill-pill-accent {
+    @apply border-cyan/20 text-[#cfe9f5] bg-cyan/5;
+    box-shadow: 0 0 22px -10px rgba(0, 212, 255, 0.6);
+  }
+}
+
+/* Ambient washes behind the homepage — neutral light on true black */
+.home-wash {
+  background:
+    radial-gradient(1100px 700px at 72% -8%, rgba(255, 255, 255, 0.04), transparent 60%),
+    radial-gradient(1200px 900px at 50% 120%, rgba(255, 255, 255, 0.02), transparent 60%),
+    linear-gradient(180deg, #060606 0%, #030303 40%, #020202 100%);
+}
+
+.home-vignette {
+  background: radial-gradient(120% 120% at 50% 40%, transparent 55%, rgba(0, 0, 0, 0.55) 100%);
+}
+
+/* Thin luminous hairline across a card's top edge */
+.card-hairline {
+  background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.55), transparent);
+}
+
+::selection {
+  background: rgba(0, 212, 255, 0.22);
+}

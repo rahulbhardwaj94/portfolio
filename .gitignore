@@ -31,3 +31,9 @@ Thumbs.db
 .idea/
 *.swp
 *.swo
+
+# TypeScript incremental build info
+tsconfig.tsbuildinfo
+
+# Local tooling
+.claude/
