@@ -21,7 +21,11 @@ export function Hero() {
   const [backdrop, setBackdrop] = useState<"none" | "2d" | "3d">("none");
 
   useEffect(() => {
-    setBackdrop(window.innerWidth < 768 ? "2d" : "3d");
+    const mq = window.matchMedia("(min-width: 768px)");
+    const update = () => setBackdrop(mq.matches ? "3d" : "2d");
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
   }, []);
 
   return (

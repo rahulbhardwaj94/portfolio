@@ -118,14 +118,20 @@ function ExhaustPlume({ origin, color, size = 0.06 }: PlumeProps) {
 /** Two-layer flame cone with a ref so the parent can flicker it. */
 const Flame = React.forwardRef<
   THREE.Group,
-  { position: [number, number, number]; width: number; length: number }
->(function Flame({ position, width, length }, ref) {
+  {
+    position: [number, number, number];
+    width: number;
+    length: number;
+    inner?: string;
+    outer?: string;
+  }
+>(function Flame({ position, width, length, inner = "#fff3dc", outer = "#ff8a3c" }, ref) {
   return (
     <group ref={ref} position={position}>
       <mesh position={[0, -length * 0.35, 0]} rotation={[Math.PI, 0, 0]}>
         <coneGeometry args={[width * 0.55, length * 0.75, 20]} />
         <meshBasicMaterial
-          color="#fff3dc"
+          color={inner}
           transparent
           opacity={0.95}
           blending={THREE.AdditiveBlending}
@@ -135,7 +141,7 @@ const Flame = React.forwardRef<
       <mesh position={[0, -length * 0.5, 0]} rotation={[Math.PI, 0, 0]}>
         <coneGeometry args={[width, length, 20]} />
         <meshBasicMaterial
-          color="#ff8a3c"
+          color={outer}
           transparent
           opacity={0.45}
           blending={THREE.AdditiveBlending}
@@ -147,152 +153,177 @@ const Flame = React.forwardRef<
 });
 
 /**
- * Space-shuttle-style stack: orange external tank, two white solid rocket
- * boosters, and an orbiter with delta wings — riding white-orange exhaust.
+ * Flying Iron-Man-style figure: red/gold armor, glowing arc reactor, and
+ * blue-white repulsor jets from the palms and boots with particle trails.
  */
-function Rocket({ mouse }: { mouse: React.MutableRefObject<{ x: number; y: number }> }) {
+function IronMan({ mouse }: { mouse: React.MutableRefObject<{ x: number; y: number }> }) {
   const group = useRef<THREE.Group>(null);
-  const flameL = useRef<THREE.Group>(null);
-  const flameR = useRef<THREE.Group>(null);
-  const flameMain = useRef<THREE.Group>(null);
-  const engineLight = useRef<THREE.PointLight>(null);
+  const jetBootL = useRef<THREE.Group>(null);
+  const jetBootR = useRef<THREE.Group>(null);
+  const jetPalmL = useRef<THREE.Group>(null);
+  const jetPalmR = useRef<THREE.Group>(null);
+  const repulsorLight = useRef<THREE.PointLight>(null);
 
-  const tankMat = useMemo(
+  const red = useMemo(
     () =>
-      new THREE.MeshStandardMaterial({ color: "#b06a3c", metalness: 0.15, roughness: 0.65 }),
+      new THREE.MeshStandardMaterial({ color: "#c62b26", metalness: 0.4, roughness: 0.35 }),
     []
   );
-  const whiteMat = useMemo(
+  const darkRed = useMemo(
     () =>
-      new THREE.MeshStandardMaterial({ color: "#e6e8ea", metalness: 0.3, roughness: 0.45 }),
+      new THREE.MeshStandardMaterial({ color: "#8f1d18", metalness: 0.45, roughness: 0.4 }),
     []
   );
-  const greyMat = useMemo(
+  const gold = useMemo(
     () =>
-      new THREE.MeshStandardMaterial({ color: "#9ea3a8", metalness: 0.5, roughness: 0.5 }),
+      new THREE.MeshStandardMaterial({ color: "#e9bb4f", metalness: 0.55, roughness: 0.3 }),
     []
   );
-  const darkMat = useMemo(
+  const glow = useMemo(
     () =>
-      new THREE.MeshStandardMaterial({ color: "#2e3134", metalness: 0.85, roughness: 0.45 }),
+      new THREE.MeshStandardMaterial({
+        color: "#bff4ff",
+        emissive: "#7fe4ff",
+        emissiveIntensity: 2.2,
+        roughness: 0.2,
+      }),
     []
   );
-
-  // Delta wing: thin extruded triangle
-  const wingGeo = useMemo(() => {
-    const shape = new THREE.Shape();
-    shape.moveTo(0, 0.55);
-    shape.lineTo(0, -0.45);
-    shape.lineTo(0.62, -0.45);
-    shape.closePath();
-    return new THREE.ExtrudeGeometry(shape, { depth: 0.035, bevelEnabled: false });
-  }, []);
-
-  // Tail fin: thin extruded triangle standing up
-  const finGeo = useMemo(() => {
-    const shape = new THREE.Shape();
-    shape.moveTo(0, 0);
-    shape.lineTo(0, 0.5);
-    shape.lineTo(0.3, 0);
-    shape.closePath();
-    return new THREE.ExtrudeGeometry(shape, { depth: 0.035, bevelEnabled: false });
-  }, []);
 
   useFrame(({ clock }) => {
     const t = clock.getElapsedTime();
     const g = group.current;
     if (!g) return;
-    // the up-and-down float
-    g.position.y = Math.sin(t * 0.9) * 0.26;
-    g.rotation.z = -0.08 + Math.sin(t * 0.55) * 0.03;
-    // cursor parallax
-    g.rotation.y += (mouse.current.x * 0.2 - g.rotation.y) * 0.05;
+    // hover: drift up and down with a slow banking sway
+    g.position.y = Math.sin(t * 0.85) * 0.3;
+    g.rotation.z = -0.1 + Math.sin(t * 0.5) * 0.05;
+    // cursor parallax — figure turns slightly toward the pointer
+    g.rotation.y += (-0.45 + mouse.current.x * 0.25 - g.rotation.y) * 0.05;
 
-    // flame flicker
-    const f = 1 + Math.sin(t * 24) * 0.12 + Math.sin(t * 9.7) * 0.07;
-    flameL.current?.scale.set(1, f, 1);
-    flameR.current?.scale.set(1, 0.9 + f * 0.2, 1);
-    flameMain.current?.scale.set(1, 0.85 + f * 0.25, 1);
-    if (engineLight.current) engineLight.current.intensity = 3.2 + f * 1.6;
+    // repulsor flicker
+    const f = 1 + Math.sin(t * 26) * 0.12 + Math.sin(t * 10.3) * 0.07;
+    jetBootL.current?.scale.set(1, f, 1);
+    jetBootR.current?.scale.set(1, 0.92 + f * 0.18, 1);
+    jetPalmL.current?.scale.set(1, 0.9 + f * 0.2, 1);
+    jetPalmR.current?.scale.set(1, f, 1);
+    if (repulsorLight.current) repulsorLight.current.intensity = 3 + f * 1.5;
   });
 
   return (
-    <group ref={group} position={[3.1, 0.1, 0]} rotation={[0.06, 0, -0.08]} scale={0.98}>
-      {/* external tank */}
-      <mesh position={[0, 0.25, 0]} material={tankMat}>
-        <cylinderGeometry args={[0.34, 0.34, 2.3, 32]} />
+    <group ref={group} position={[3.1, 0.15, 0]} rotation={[0.08, -0.45, -0.1]} scale={1.05}>
+      {/* helmet */}
+      <group position={[0, 1.02, 0]}>
+        <mesh material={red}>
+          <sphereGeometry args={[0.17, 24, 24]} />
+        </mesh>
+        {/* gold faceplate */}
+        <mesh position={[0, -0.01, 0.075]} scale={[0.78, 0.85, 0.62]} material={gold}>
+          <sphereGeometry args={[0.16, 24, 24]} />
+        </mesh>
+        {/* eye slits */}
+        {[-0.055, 0.055].map((x) => (
+          <mesh key={x} position={[x, 0.015, 0.155]} material={glow}>
+            <boxGeometry args={[0.05, 0.016, 0.02]} />
+          </mesh>
+        ))}
+      </group>
+
+      {/* torso */}
+      <mesh position={[0, 0.52, 0]} material={red}>
+        <cylinderGeometry args={[0.24, 0.16, 0.62, 20]} />
       </mesh>
-      <mesh position={[0, 1.55, 0]} material={tankMat}>
-        <coneGeometry args={[0.34, 0.6, 32]} />
+      {/* chest plate */}
+      <mesh position={[0, 0.6, 0.13]} scale={[1, 0.75, 0.5]} material={gold}>
+        <sphereGeometry args={[0.16, 20, 20]} />
       </mesh>
-      <mesh position={[0, -0.95, 0]} material={tankMat}>
-        <sphereGeometry args={[0.34, 24, 16, 0, Math.PI * 2, Math.PI / 2, Math.PI / 2]} />
+      {/* arc reactor */}
+      <mesh position={[0, 0.64, 0.21]} material={glow}>
+        <sphereGeometry args={[0.05, 20, 20]} />
+      </mesh>
+      {/* abdomen + pelvis */}
+      <mesh position={[0, 0.08, 0]} material={darkRed}>
+        <cylinderGeometry args={[0.155, 0.17, 0.28, 20]} />
+      </mesh>
+      <mesh position={[0, -0.1, 0]} scale={[1, 0.7, 0.85]} material={red}>
+        <sphereGeometry args={[0.18, 20, 20]} />
       </mesh>
 
-      {/* solid rocket boosters */}
-      {[-0.56, 0.56].map((x) => (
-        <group key={x} position={[x, 0, 0]}>
-          <mesh position={[0, 0.1, 0]} material={whiteMat}>
-            <cylinderGeometry args={[0.15, 0.15, 2.1, 24]} />
+      {/* arms — angled down and slightly out, palms firing */}
+      {[-1, 1].map((side) => (
+        <group
+          key={`arm${side}`}
+          position={[side * 0.27, 0.72, 0]}
+          rotation={[0, 0, side * -0.32]}
+        >
+          <mesh material={red}>
+            <sphereGeometry args={[0.11, 20, 20]} />
           </mesh>
-          <mesh position={[0, 1.32, 0]} material={greyMat}>
-            <coneGeometry args={[0.15, 0.42, 24]} />
+          <mesh position={[0, -0.24, 0]} material={red}>
+            <cylinderGeometry args={[0.075, 0.065, 0.34, 16]} />
           </mesh>
-          <mesh position={[0, -1.05, 0]} material={darkMat}>
-            <cylinderGeometry args={[0.1, 0.15, 0.22, 24]} />
+          <mesh position={[0, -0.44, 0]} material={gold}>
+            <sphereGeometry args={[0.07, 16, 16]} />
           </mesh>
+          <mesh position={[0, -0.62, 0]} material={gold}>
+            <cylinderGeometry args={[0.062, 0.055, 0.3, 16]} />
+          </mesh>
+          {/* hand + palm repulsor */}
+          <mesh position={[0, -0.82, 0]} material={red}>
+            <sphereGeometry args={[0.065, 16, 16]} />
+          </mesh>
+          <mesh position={[0, -0.885, 0]} material={glow}>
+            <sphereGeometry args={[0.035, 16, 16]} />
+          </mesh>
+          <Flame
+            ref={side < 0 ? jetPalmL : jetPalmR}
+            position={[0, -0.9, 0]}
+            width={0.07}
+            length={0.55}
+            inner="#eefbff"
+            outer="#5fd6ff"
+          />
         </group>
       ))}
 
-      {/* orbiter riding the tank */}
-      <group position={[0, -0.15, 0.52]}>
-        <mesh position={[0, 0.25, 0]} material={whiteMat}>
-          <cylinderGeometry args={[0.15, 0.17, 1.35, 24]} />
-        </mesh>
-        <mesh position={[0, 1.0, 0]} material={greyMat}>
-          <sphereGeometry args={[0.15, 24, 16, 0, Math.PI * 2, 0, Math.PI / 2]} />
-        </mesh>
-        {/* delta wings */}
-        <mesh
-          geometry={wingGeo}
-          material={whiteMat}
-          position={[0.02, -0.45, 0.1]}
-          rotation={[0, Math.PI / 2, 0]}
-        />
-        <mesh
-          geometry={wingGeo}
-          material={whiteMat}
-          position={[-0.02, -0.45, 0.1]}
-          rotation={[0, -Math.PI / 2, 0]}
-          scale={[1, 1, -1]}
-        />
-        {/* tail fin */}
-        <mesh
-          geometry={finGeo}
-          material={whiteMat}
-          position={[-0.018, 0.72, 0.02]}
-          rotation={[0.35, 0, 0]}
-        />
-        {/* main engines */}
-        <mesh position={[0, -0.5, 0]} material={darkMat}>
-          <cylinderGeometry args={[0.09, 0.13, 0.18, 20]} />
-        </mesh>
-      </group>
+      {/* legs — together, slightly bent back */}
+      {[-1, 1].map((side) => (
+        <group key={`leg${side}`} position={[side * 0.12, -0.22, 0]} rotation={[0.08, 0, side * -0.05]}>
+          <mesh position={[0, -0.24, 0]} material={red}>
+            <cylinderGeometry args={[0.1, 0.085, 0.46, 16]} />
+          </mesh>
+          <mesh position={[0, -0.5, 0]} material={gold}>
+            <sphereGeometry args={[0.085, 16, 16]} />
+          </mesh>
+          <mesh position={[0, -0.76, 0]} material={red}>
+            <cylinderGeometry args={[0.08, 0.07, 0.44, 16]} />
+          </mesh>
+          {/* boot */}
+          <mesh position={[0, -1.02, 0.03]} material={darkRed}>
+            <boxGeometry args={[0.13, 0.14, 0.22]} />
+          </mesh>
+          {/* boot repulsor */}
+          <mesh position={[0, -1.1, 0]} material={glow}>
+            <cylinderGeometry args={[0.05, 0.06, 0.03, 16]} />
+          </mesh>
+          <Flame
+            ref={side < 0 ? jetBootL : jetBootR}
+            position={[0, -1.12, 0]}
+            width={0.1}
+            length={0.85}
+            inner="#eefbff"
+            outer="#5fd6ff"
+          />
+        </group>
+      ))}
 
-      {/* flames: boosters + orbiter main engines */}
-      <Flame ref={flameL} position={[-0.56, -1.18, 0]} width={0.17} length={1.5} />
-      <Flame ref={flameR} position={[0.56, -1.18, 0]} width={0.17} length={1.5} />
-      <Flame ref={flameMain} position={[0, -0.78, 0.52]} width={0.12} length={1.0} />
-
-      {/* billowing exhaust */}
-      <ExhaustPlume origin={[-0.56, -1.15, 0]} color="#ffc9a0" />
-      <ExhaustPlume origin={[0.56, -1.15, 0]} color="#ffc9a0" />
-      <ExhaustPlume origin={[0, -0.75, 0.52]} color="#fff0dc" size={0.045} />
+      {/* repulsor trails */}
+      <ExhaustPlume origin={[-0.14, -1.35, 0]} color="#9fe9ff" size={0.045} />
+      <ExhaustPlume origin={[0.14, -1.35, 0]} color="#9fe9ff" size={0.045} />
 
       <pointLight
-        ref={engineLight}
-        position={[0, -1.5, 0.6]}
-        color="#ff9a4d"
+        ref={repulsorLight}
+        position={[0, -1.4, 0.5]}
+        color="#7fd9ff"
         distance={6}
       />
     </group>
@@ -341,10 +372,11 @@ export function HeroScene() {
         gl={{ alpha: true, antialias: true }}
         frameloop={reduced ? "demand" : active ? "always" : "never"}
       >
-        <ambientLight intensity={0.35} />
-        <directionalLight position={[-4, 5, 6]} intensity={1.4} color="#ffffff" />
+        <ambientLight intensity={0.55} />
+        <directionalLight position={[-4, 5, 6]} intensity={1.7} color="#ffffff" />
+        <directionalLight position={[6, 1, 4]} intensity={0.6} color="#dfe9f2" />
         <Stars mouse={mouse} />
-        <Rocket mouse={mouse} />
+        <IronMan mouse={mouse} />
       </Canvas>
     </div>
   );
