@@ -5,67 +5,64 @@ export function ContactSection() {
   return (
     <section
       id="contact"
-      className="relative z-[5] mx-auto max-w-[1240px] px-6 pb-[60px] pt-[110px] md:px-16"
+      className="relative z-[5] mx-auto max-w-[1240px] scroll-mt-20 px-5 pb-[48px] pt-[100px] md:px-16"
     >
       <Reveal>
-        <div className="glass-card rounded-[26px] p-12 px-6 text-center md:px-12 md:py-16">
+        <div className="panel scanlines overflow-hidden px-6 py-14 md:px-14 md:py-20">
           <div
             aria-hidden
-            className="pointer-events-none absolute left-1/2 top-[-40%] h-[520px] w-[520px] -ml-[260px] rounded-full"
+            className="pointer-events-none absolute -right-40 -top-40 h-[520px] w-[520px] rounded-full"
             style={{
               background:
-                "radial-gradient(circle, rgba(255,255,255,0.07), rgba(255,255,255,0.02) 45%, transparent 70%)",
+                "radial-gradient(circle, rgba(255,181,71,0.12), rgba(255,181,71,0.03) 45%, transparent 70%)",
             }}
           />
-          <div className="relative">
-            <div className="home-eyebrow mb-5">04 — Contact</div>
-            <h2 className="font-grotesk text-[34px] font-semibold leading-[1.08] tracking-[-1.6px] text-ink-hi md:text-[46px]">
-              {profile.contact.heading}
-            </h2>
-            <p className="mx-auto mt-[18px] max-w-[440px] text-base font-light leading-[1.6] text-ink-soft">
-              {profile.contact.sub}
-            </p>
-            <a
-              href={`mailto:${profile.email}`}
-              className="mt-[30px] inline-flex items-center gap-2.5 rounded-xl px-[30px] py-[15px] text-base font-medium text-[#04252e]"
-              style={{
-                background: "linear-gradient(180deg, #38dbff, #00c2f0)",
-                boxShadow: "0 12px 44px -14px rgba(0,212,255,0.7)",
-              }}
-            >
-              {profile.email}
-            </a>
-            <div className="mt-[34px] flex justify-center gap-[26px] text-sm text-[#9fa3a8]">
-              <a
-                href={profile.links.github}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="transition-colors hover:text-ink-hi"
-              >
-                GitHub
+          <div className="relative grid gap-10 md:grid-cols-[1.3fr_1fr] md:items-end">
+            <div>
+              <div className="home-eyebrow mb-5">05 — Open a trace</div>
+              <h2 className="font-serif text-[48px] leading-[0.98] text-paper-hi md:text-[80px]">
+                Let&apos;s build <em className="phosphor-glow text-phosphor">reliable</em> agents.
+              </h2>
+              <p className="mt-6 max-w-[440px] text-[16px] font-light leading-[1.65] text-paper-soft">
+                {profile.contact.sub}
+              </p>
+            </div>
+            <div className="flex flex-col gap-5 md:items-end">
+              <a href={`mailto:${profile.email}`} className="btn-phosphor w-fit normal-case tracking-[0.5px]">
+                {profile.email}
               </a>
-              <a
-                href={profile.links.linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="transition-colors hover:text-ink-hi"
-              >
-                LinkedIn
-              </a>
-              <a
-                href={profile.links.resume}
-                className="transition-colors hover:text-ink-hi"
-              >
-                Résumé
-              </a>
+              <div className="flex gap-6 font-trace text-[11.5px] uppercase tracking-[1.5px] text-paper-soft">
+                <a
+                  href={profile.links.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="transition-colors hover:text-phosphor"
+                >
+                  GitHub ↗
+                </a>
+                <a
+                  href={profile.links.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="transition-colors hover:text-phosphor"
+                >
+                  LinkedIn ↗
+                </a>
+                <a href={profile.links.resume} className="transition-colors hover:text-phosphor">
+                  Résumé
+                </a>
+              </div>
             </div>
           </div>
         </div>
       </Reveal>
 
-      <div className="mt-11 flex flex-wrap items-center justify-between gap-3 font-plexmono text-[11.5px] tracking-[0.5px] text-ink-faint">
-        <span>© 2026 {profile.name}</span>
-        <span>{profile.footerTagline}</span>
+      <div className="mt-10 flex flex-wrap items-center justify-between gap-3 font-trace text-[11px] uppercase tracking-[1.2px] text-paper-faint">
+        <span>© 2026 {profile.name} · {profile.location}</span>
+        <span className="flex items-center gap-2">
+          <span className="h-1.5 w-1.5 rounded-full bg-ok" />
+          {profile.footerTagline}
+        </span>
       </div>
     </section>
   );

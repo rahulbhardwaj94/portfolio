@@ -1,6 +1,6 @@
 export type Skill = {
   label: string;
-  /** Accented pills get the cyan glow treatment. */
+  /** Accented pills get the amber phosphor treatment. */
   accent?: boolean;
 };
 
@@ -16,7 +16,7 @@ export const skills: Skill[] = [
 ];
 
 export const about = {
-  eyebrow: "02 — About",
+  eyebrow: "03 — About",
   heading: "Distributed-systems instincts, pointed at agents.",
   paragraphs: [
     "I build the unglamorous parts of software that matter most under load — queues, idempotency, retries, tracing, and the AWS plumbing that keeps a lending platform correct at scale.",

@@ -15,10 +15,18 @@ const config: Config = {
         plex: ["var(--font-plex)", "system-ui", "sans-serif"],
         plexmono: ["var(--font-plex-mono)", "ui-monospace", "monospace"],
         grotesk: ["var(--font-grotesk)", "system-ui", "sans-serif"],
+        // Flight Recorder theme
+        serif: ["var(--font-serif)", "ui-serif", "Georgia", "serif"],
+        trace: ["var(--font-trace)", "ui-monospace", "monospace"],
       },
       colors: {
         // Homepage (design spec) tokens
-        night: "#030303",
+        night: "#0b0a08",
+        // Flight Recorder theme: warm paper ink on off-black, amber phosphor accent
+        phosphor: { DEFAULT: "#ffb547", soft: "#ffd08a", deep: "#c9822a" },
+        paper: { hi: "#f3ecdd", body: "#d9d1c0", soft: "#a39b8a", dim: "#7a7366", faint: "#4d483f" },
+        ok: "#9fcf7a",
+        sev: "#ff7a59",
         cyan: "#00d4ff",
         violet: "#a855f7",
         ink: {

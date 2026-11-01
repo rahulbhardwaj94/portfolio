@@ -3,12 +3,11 @@ export const profile = {
   positioning: "Backend engineer building AI infrastructure & agent tooling",
   availability: "Available for AI infrastructure roles",
   heroHeadline: {
-    line1: "Backend engineer building",
-    line2: "AI infrastructure &",
-    line2Accent: "agent tooling",
+    line1: "Agents that behave like",
+    line2Accent: "production software.",
   },
   heroSub:
-    "Years of turning distributed systems into things that stay up under load. Now I point that foundation at orchestration, retrieval, and evaluation for LLM agents.",
+    "Backend engineer. I spent years keeping lending and manufacturing systems correct under load — now I build the orchestration, evaluation, and audit layer that LLM agents are missing.",
   location: "Delhi, India",
   email: "rhlbhrdwj3@gmail.com",
   links: {
@@ -20,5 +19,6 @@ export const profile = {
     heading: "Let's build reliable agents.",
     sub: "Open to Senior / Staff AI engineering roles. The best way to reach me is email.",
   },
-  footerTagline: "Backend → AI Engineering",
+  footerTagline: "status 200 OK · replies within a day",
+  timezone: "Asia/Kolkata",
 };

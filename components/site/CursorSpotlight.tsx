@@ -28,7 +28,7 @@ export function CursorSpotlight() {
       style={{
         transform: "translate(-9999px, -9999px)",
         background:
-          "radial-gradient(circle, rgba(255,255,255,0.075), rgba(255,255,255,0.028) 45%, transparent 70%)",
+          "radial-gradient(circle, rgba(255,190,100,0.06), rgba(255,190,100,0.02) 45%, transparent 70%)",
       }}
     />
   );

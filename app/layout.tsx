@@ -4,6 +4,8 @@ import {
   Geist_Mono,
   IBM_Plex_Mono,
   IBM_Plex_Sans,
+  Instrument_Serif,
+  JetBrains_Mono,
   Space_Grotesk,
 } from "next/font/google";
 import { SmoothScroll } from "@/components/SmoothScroll";
@@ -43,6 +45,22 @@ const grotesk = Space_Grotesk({
   display: "swap",
 });
 
+// Flight Recorder theme: editorial serif for display, JetBrains Mono for trace data.
+const serif = Instrument_Serif({
+  variable: "--font-serif",
+  subsets: ["latin"],
+  weight: ["400"],
+  style: ["normal", "italic"],
+  display: "swap",
+});
+
+const traceMono = JetBrains_Mono({
+  variable: "--font-trace",
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: "Rahul Bhardwaj — Backend & AI Infrastructure Engineer",
   description:
@@ -63,7 +81,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geist.variable} ${geistMono.variable} ${plexSans.variable} ${plexMono.variable} ${grotesk.variable}`}
+        className={`${geist.variable} ${geistMono.variable} ${plexSans.variable} ${plexMono.variable} ${grotesk.variable} ${serif.variable} ${traceMono.variable}`}
       >
         <SmoothScroll>{children}</SmoothScroll>
       </body>

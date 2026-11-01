@@ -5,12 +5,12 @@ export function AboutSection() {
   return (
     <section
       id="about"
-      className="relative z-[5] mx-auto max-w-[1240px] px-6 py-[90px] md:px-16 md:py-[120px]"
+      className="relative z-[5] mx-auto max-w-[1240px] scroll-mt-20 px-5 py-[90px] md:px-16 md:py-[120px]"
     >
-      <div className="grid grid-cols-1 items-start gap-10 md:grid-cols-[0.9fr_1.1fr] md:gap-16">
+      <div className="grid grid-cols-1 items-start gap-10 md:grid-cols-[1fr_1fr] md:gap-20">
         <Reveal>
-          <div className="home-eyebrow mb-3.5">{about.eyebrow}</div>
-          <h2 className="font-grotesk text-[32px] font-semibold leading-[1.1] tracking-[-1.2px] text-[#f0f1f2] md:text-[40px]">
+          <div className="home-eyebrow mb-4">{about.eyebrow}</div>
+          <h2 className="font-serif text-[40px] leading-[1.05] text-paper-hi md:text-[56px]">
             {about.heading}
           </h2>
         </Reveal>
@@ -18,14 +18,19 @@ export function AboutSection() {
           {about.paragraphs.map((p, i) => (
             <p
               key={i}
-              className={`text-[17px] font-light leading-[1.7] text-[#a7abb0] ${
-                i > 0 ? "mt-5" : ""
+              className={`text-[17px] font-light leading-[1.75] text-paper-soft ${
+                i === 0
+                  ? "first-letter:float-left first-letter:mr-2 first-letter:font-serif first-letter:text-[56px] first-letter:leading-[0.85] first-letter:text-phosphor"
+                  : "mt-5"
               }`}
             >
               {p}
             </p>
           ))}
-          <div className="mt-[30px] flex flex-wrap gap-2.5">
+          <div className="mt-8 font-trace text-[10.5px] uppercase tracking-[1.5px] text-paper-faint">
+            span.attributes
+          </div>
+          <div className="mt-3 flex flex-wrap gap-2">
             {skills.map((s) => (
               <span
                 key={s.label}

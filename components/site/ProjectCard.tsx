@@ -1,170 +1,127 @@
 "use client";
 
-import { useRef } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import type { Project } from "@/data/projects";
 import { featuredHighlights } from "@/data/projects";
 
 /**
- * Glassmorphic project card with cursor tilt + contained sheen.
- * Glow ramps slowly on enter (~0.6s) and fades fast on leave (~0.15s).
+ * A project rendered as an expandable span in a trace viewer: the collapsed
+ * row shows service, op and status; expanding reveals its attributes.
  */
-export function ProjectCard({ project }: { project: Project }) {
-  const cardRef = useRef<HTMLElement>(null);
-  const sheenRef = useRef<HTMLDivElement>(null);
-
-  const interactive = () =>
-    typeof window !== "undefined" &&
-    window.matchMedia("(hover: hover)").matches &&
-    !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-  const onEnter = () => {
-    const s = sheenRef.current;
-    if (!s || !interactive()) return;
-    s.style.transition = "opacity .6s ease";
-    s.style.opacity = "1";
-  };
-
-  const onMove = (e: React.MouseEvent) => {
-    const c = cardRef.current;
-    const s = sheenRef.current;
-    if (!c || !s || !interactive()) return;
-    const r = c.getBoundingClientRect();
-    const px = (e.clientX - r.left) / r.width;
-    const py = (e.clientY - r.top) / r.height;
-    const rx = (0.5 - py) * 5;
-    const ry = (px - 0.5) * 5;
-    c.style.transform = `perspective(1000px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-6px)`;
-    s.style.background = `radial-gradient(420px circle at ${px * 100}% ${py * 100}%, rgba(255,255,255,0.09), rgba(255,255,255,0.03) 45%, transparent 70%)`;
-  };
-
-  const onLeave = () => {
-    const c = cardRef.current;
-    const s = sheenRef.current;
-    if (c) c.style.transform = "";
-    if (s) {
-      s.style.transition = "opacity .15s ease-out";
-      s.style.opacity = "0";
-    }
-  };
-
-  const featured = project.featured;
+export function ProjectCard({
+  project,
+  index,
+  open,
+  onToggle,
+}: {
+  project: Project;
+  index: number;
+  open: boolean;
+  onToggle: () => void;
+}) {
+  const spanId = (0x3a7f + index * 0x1b3).toString(16).padStart(4, "0");
 
   return (
     <article
-      ref={cardRef}
-      onMouseEnter={onEnter}
-      onMouseMove={onMove}
-      onMouseLeave={onLeave}
-      className={`glass-card flex h-full flex-col transition-transform duration-500 [transform-style:preserve-3d] ${
-        featured ? "p-[34px]" : "p-[26px]"
+      className={`border-b border-paper-faint/40 transition-colors ${
+        open ? "bg-white/[0.02]" : "hover:bg-white/[0.012]"
       }`}
     >
-      <div
-        ref={sheenRef}
-        aria-hidden
-        className="pointer-events-none absolute inset-0 rounded-[inherit] opacity-0"
-      />
-      {featured && (
-        <div className="card-hairline absolute left-[26px] right-[26px] top-0 h-px" />
-      )}
-
-      <div className="flex items-center justify-between">
+      <button
+        type="button"
+        onClick={onToggle}
+        aria-expanded={open}
+        className="grid w-full grid-cols-[18px_1fr_auto] items-center gap-3 px-3 py-5 text-left md:grid-cols-[18px_200px_1fr_auto] md:gap-6 md:px-5"
+      >
         <span
-          className={`font-plexmono uppercase ${
-            featured
-              ? "flex items-center gap-2 text-[11px] tracking-[2px] text-cyan"
-              : "text-[10.5px] tracking-[1.6px] text-[#64686e]"
+          className={`font-trace text-[12px] text-paper-dim transition-transform duration-300 ${
+            open ? "rotate-90 text-phosphor" : ""
           }`}
         >
-          {featured && (
-            <span
-              className="h-1.5 w-1.5 rounded-full bg-cyan"
-              style={{ boxShadow: "0 0 10px #00d4ff" }}
-            />
-          )}
+          ▸
+        </span>
+        <span className="flex items-baseline gap-3">
+          <span className={`font-serif text-[26px] leading-none md:text-[30px] ${open ? "text-phosphor" : "text-paper-hi"}`}>
+            {project.name}
+          </span>
+        </span>
+        <span className="hidden truncate font-trace text-[11.5px] uppercase tracking-[1.5px] text-paper-dim md:block">
           {project.eyebrow}
         </span>
-        {project.links.github && (
-          <a
-            href={project.links.github}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label={`${project.name} on GitHub`}
-            className={
-              featured
-                ? "flex h-[34px] w-[34px] items-center justify-center rounded-[9px] border border-white/10 bg-white/[0.02] text-sm text-[#c6c9cc] transition-colors hover:border-white/25"
-                : "text-[13px] text-[#c6c9cc] transition-colors hover:text-ink-hi"
-            }
+        <span className="flex items-center gap-2 font-trace text-[11px] text-paper-dim">
+          <span className="hidden sm:inline">span {spanId}</span>
+          <span className="rounded-[3px] border border-ok/40 px-1.5 py-[1px] text-ok">OK</span>
+        </span>
+      </button>
+
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.div
+            key="attrs"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.4, ease: [0.2, 0.7, 0.2, 1] }}
+            className="overflow-hidden"
           >
-            ↗
-          </a>
-        )}
-      </div>
-
-      <h3
-        className={`font-grotesk font-semibold text-ink-hi ${
-          featured
-            ? "mt-[26px] text-[34px] tracking-[-1px]"
-            : "mt-4 text-[21px] tracking-[-0.5px]"
-        }`}
-      >
-        {project.name}
-      </h3>
-      <p
-        className={`font-light text-[#9fa3a8] ${
-          featured
-            ? "mt-3.5 max-w-[520px] text-[16.5px] leading-[1.6]"
-            : "mt-[9px] text-[13.5px] leading-[1.55]"
-        }`}
-      >
-        {project.blurb}
-      </p>
-
-      {featured && (
-        <div className="mt-[26px] flex flex-wrap gap-[26px]">
-          {featuredHighlights.map((h, i) => (
-            <div key={h.label} className="flex gap-[26px]">
-              {i > 0 && <div className="w-px bg-white/[0.08]" />}
+            <div className="grid gap-6 px-3 pb-7 md:grid-cols-[218px_1fr] md:gap-6 md:px-5">
+              <div className="hidden md:block" />
               <div>
-                <div className="font-grotesk text-3xl font-semibold tracking-[-0.5px] text-[#eaf6ff]">
-                  {h.value}
-                </div>
-                <div className="mt-[3px] text-xs tracking-[0.4px] text-ink-dim">
-                  {h.label}
-                </div>
+                <p className="max-w-[640px] text-[16px] font-light leading-[1.65] text-paper-body">
+                  {project.blurb}
+                </p>
+
+                {project.featured && (
+                  <div className="mt-6 flex flex-wrap gap-8">
+                    {featuredHighlights.map((h) => (
+                      <div key={h.label}>
+                        <div className="font-serif text-[34px] leading-none text-paper-hi">{h.value}</div>
+                        <div className="mt-1.5 font-trace text-[10.5px] uppercase tracking-[1.5px] text-paper-dim">
+                          {h.label}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                <dl className="mt-6 grid max-w-[640px] grid-cols-[110px_1fr] gap-x-4 gap-y-1.5 font-trace text-[12px]">
+                  <dt className="text-paper-dim">kind</dt>
+                  <dd className="text-paper-body">{project.eyebrow.toLowerCase()}</dd>
+                  <dt className="text-paper-dim">stack</dt>
+                  <dd className="text-paper-body">{project.tags.join(" · ")}</dd>
+                  {project.detail && (
+                    <>
+                      <dt className="text-paper-dim">guarantee</dt>
+                      <dd className="text-phosphor-soft">{project.detail}</dd>
+                    </>
+                  )}
+                  {project.metric && (
+                    <>
+                      <dt className="text-paper-dim">{project.metric.label}</dt>
+                      <dd className="text-phosphor-soft">{project.metric.value}</dd>
+                    </>
+                  )}
+                  {project.links.github && (
+                    <>
+                      <dt className="text-paper-dim">source</dt>
+                      <dd>
+                        <a
+                          href={project.links.github}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-phosphor underline decoration-phosphor/30 underline-offset-4 transition-colors hover:decoration-phosphor"
+                        >
+                          github.com/rahulbhardwaj94/{project.slug} ↗
+                        </a>
+                      </dd>
+                    </>
+                  )}
+                </dl>
               </div>
             </div>
-          ))}
-        </div>
-      )}
-
-      {project.metric && (
-        <div className="mt-4 font-grotesk text-[22px] font-semibold text-[#eaf6ff]">
-          {project.metric.value}{" "}
-          <span className="text-xs font-normal text-ink-dim">
-            {project.metric.label}
-          </span>
-        </div>
-      )}
-
-      {project.detail && (
-        <div className="mt-4 font-plexmono text-xs text-cyan">{project.detail}</div>
-      )}
-
-      <div
-        className={`mt-auto flex flex-wrap ${
-          featured ? "gap-[9px] pt-7" : "gap-[7px] pt-[18px]"
-        }`}
-      >
-        {project.tags.map((tag) => (
-          <span
-            key={tag}
-            className={featured ? "tag-pill bg-white/[0.02] !text-xs !px-3 !py-1.5 !text-[#b3b7bb]" : "tag-pill"}
-          >
-            {tag}
-          </span>
-        ))}
-      </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </article>
   );
 }

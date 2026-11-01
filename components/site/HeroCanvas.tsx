@@ -100,7 +100,7 @@ export function HeroCanvas() {
             ctx.beginPath();
             ctx.moveTo(a.x + parx * a.z, a.y + pary * a.z);
             ctx.lineTo(b.x + parx * b.z, b.y + pary * b.z);
-            ctx.strokeStyle = `rgba(255,255,255,${(1 - d / maxD) * 0.09})`;
+            ctx.strokeStyle = `rgba(243,226,196,${(1 - d / maxD) * 0.09})`;
             ctx.lineWidth = 1;
             ctx.stroke();
           }
@@ -114,14 +114,14 @@ export function HeroCanvas() {
         // like a real night sky rather than neon points.
         const rg = n.r * 5;
         const g = ctx.createRadialGradient(x, y, 0, x, y, rg);
-        g.addColorStop(0, `rgba(255,255,255,${0.5 * n.z})`);
-        g.addColorStop(0.4, `rgba(255,255,255,${0.1 * n.z})`);
-        g.addColorStop(1, "rgba(255,255,255,0)");
+        g.addColorStop(0, `rgba(243,226,196,${0.5 * n.z})`);
+        g.addColorStop(0.4, `rgba(243,226,196,${0.1 * n.z})`);
+        g.addColorStop(1, "rgba(243,226,196,0)");
         ctx.fillStyle = g;
         ctx.beginPath();
         ctx.arc(x, y, rg, 0, Math.PI * 2);
         ctx.fill();
-        ctx.fillStyle = `rgba(255,255,255,${0.45 + 0.5 * n.z})`;
+        ctx.fillStyle = `rgba(243,226,196,${0.45 + 0.5 * n.z})`;
         ctx.beginPath();
         ctx.arc(x, y, n.r * 0.8, 0, Math.PI * 2);
         ctx.fill();
