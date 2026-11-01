@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import { profile } from "@/data/profile";
 import { TraceWaterfall } from "./TraceWaterfall";
+import { Mascot } from "./Mascot";
 
 // Lazy-load the three.js span field so it never blocks first paint.
 // Desktop only — on phones it would sit behind the text, so mobile stays clean.
@@ -62,7 +63,11 @@ export function Hero() {
         </div>
       </div>
 
-      <div className="mt-12 md:mt-14 rise" style={{ animationDelay: "200ms" }}>
+      <div className="relative mt-16 md:mt-[72px] rise" style={{ animationDelay: "200ms" }}>
+        {/* Bix perches on the panel's top edge */}
+        <div className="absolute bottom-full right-6 z-10 -mb-[3px] md:right-10">
+          <Mascot />
+        </div>
         <TraceWaterfall />
       </div>
     </section>
