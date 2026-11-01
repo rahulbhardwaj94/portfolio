@@ -4,8 +4,8 @@ import {
   Geist_Mono,
   IBM_Plex_Mono,
   IBM_Plex_Sans,
-  Instrument_Serif,
-  JetBrains_Mono,
+  Newsreader,
+  Schibsted_Grotesk,
   Space_Grotesk,
 } from "next/font/google";
 import { SmoothScroll } from "@/components/SmoothScroll";
@@ -38,6 +38,7 @@ const plexMono = IBM_Plex_Mono({
   display: "swap",
 });
 
+// Space Grotesk is still used by the résumé page.
 const grotesk = Space_Grotesk({
   variable: "--font-grotesk",
   subsets: ["latin"],
@@ -45,19 +46,18 @@ const grotesk = Space_Grotesk({
   display: "swap",
 });
 
-// Flight Recorder theme: editorial serif for display, JetBrains Mono for trace data.
-const serif = Instrument_Serif({
-  variable: "--font-serif",
+// Homepage "monograph" theme: Newsreader display, Schibsted Grotesk body.
+const schibsted = Schibsted_Grotesk({
+  variable: "--font-schibsted",
   subsets: ["latin"],
-  weight: ["400"],
-  style: ["normal", "italic"],
+  weight: ["400", "500", "600", "700"],
   display: "swap",
 });
 
-const traceMono = JetBrains_Mono({
-  variable: "--font-trace",
+const newsreader = Newsreader({
+  variable: "--font-newsreader",
   subsets: ["latin"],
-  weight: ["400", "500"],
+  weight: ["400", "500", "600"],
   display: "swap",
 });
 
@@ -78,11 +78,13 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Font variables sit on <html> so the homepage [data-theme] block can reference them.
   return (
-    <html lang="en">
-      <body
-        className={`${geist.variable} ${geistMono.variable} ${plexSans.variable} ${plexMono.variable} ${grotesk.variable} ${serif.variable} ${traceMono.variable}`}
-      >
+    <html
+      lang="en"
+      className={`${geist.variable} ${geistMono.variable} ${plexSans.variable} ${plexMono.variable} ${grotesk.variable} ${schibsted.variable} ${newsreader.variable}`}
+    >
+      <body>
         <SmoothScroll>{children}</SmoothScroll>
       </body>
     </html>

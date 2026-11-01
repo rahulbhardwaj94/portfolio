@@ -27,8 +27,8 @@ function LocalClock() {
   }, []);
 
   return (
-    <span className="hidden font-trace text-[11px] uppercase tracking-[1.5px] text-paper-dim lg:inline">
-      DEL <span className="text-paper-body">{time ?? "--:--"}</span> IST
+    <span className="hidden font-data text-[11px] text-fg-dim lg:inline">
+      DEL <span className="text-fg-body">{time ?? "--:--"}</span> IST
     </span>
   );
 }
@@ -36,27 +36,27 @@ function LocalClock() {
 export function Topbar() {
   return (
     <header
-      className="fixed inset-x-0 top-0 z-20 flex items-center justify-between border-b border-paper-faint/30 px-5 py-4 backdrop-blur-[12px] md:px-10"
-      style={{ background: "rgba(11,10,8,0.6)" }}
+      className="fixed inset-x-0 top-0 z-20 flex items-center justify-between border-b border-fg-faint/30 bg-night/75 px-5 py-4 backdrop-blur-[12px] md:px-10"
     >
       <a href="#" className="flex items-center gap-3">
-        <span className="grid h-7 w-7 place-items-center rounded-[5px] border border-phosphor/50 font-serif text-[17px] italic leading-none text-phosphor">
-          r
+        {/* flight-recorder orange box */}
+        <span className="h-2.5 w-2.5 rounded-[2px] bg-signal" />
+        <span className="font-display text-[17px] font-medium leading-none tracking-[-0.2px] text-fg-hi">
+          {profile.name}
         </span>
-        <span className="font-serif text-[19px] leading-none text-paper-hi">{profile.name}</span>
       </a>
       <div className="flex items-center gap-8">
         <LocalClock />
-        <nav className="hidden items-center gap-7 font-trace text-[11.5px] uppercase tracking-[1.5px] text-paper-soft md:flex">
+        <nav className="hidden items-center gap-7 font-data text-[11.5px] text-fg-soft md:flex">
           {navLinks.map((l) => (
-            <a key={l.href} href={l.href} className="transition-colors hover:text-phosphor">
+            <a key={l.href} href={l.href} className="transition-colors hover:text-signal">
               {l.label}
             </a>
           ))}
         </nav>
         <a
           href={profile.links.resume}
-          className="rounded-[5px] border border-paper-faint px-3.5 py-1.5 font-trace text-[11px] uppercase tracking-[1.5px] text-paper-body transition-colors hover:border-phosphor hover:text-phosphor"
+          className="rounded-[5px] border border-fg-faint px-3.5 py-1.5 font-data text-[11px] text-fg-body transition-colors hover:border-signal hover:text-signal"
         >
           Résumé
         </a>

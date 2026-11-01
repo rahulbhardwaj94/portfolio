@@ -23,12 +23,12 @@ export function TraceWaterfall() {
   const pct = (y: number) => ((y - axisStart) / (axisEnd - axisStart)) * 100;
 
   return (
-    <div className="panel scanlines overflow-hidden">
+    <div className="panel overflow-hidden">
       {/* header strip */}
-      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-paper-faint/50 px-4 py-2.5 font-trace text-[10.5px] uppercase tracking-[1.5px] text-paper-dim md:px-5">
+      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-fg-faint/50 px-4 py-2.5 font-data text-[10.5px] text-fg-dim md:px-5">
         <span className="flex items-center gap-2">
-          <span className="span-live h-1.5 w-1.5 rounded-full bg-phosphor" />
-          trace <span className="text-paper-soft">{traceId.slice(0, 16)}</span>
+          <span className="span-live h-1.5 w-1.5 rounded-full bg-signal" />
+          trace <span className="text-fg-soft">{traceId.slice(0, 16)}</span>
         </span>
         <span className="hidden sm:inline">
           {trace.length} spans · <span className="text-ok">0 errors</span>
@@ -39,7 +39,7 @@ export function TraceWaterfall() {
         {/* axis */}
         <div className="grid grid-cols-[112px_1fr] gap-3 md:grid-cols-[260px_1fr] md:gap-5">
           <div />
-          <div className="relative h-6 font-trace text-[10px] text-paper-faint">
+          <div className="relative h-6 font-data text-[10px] text-fg-dim">
             {ticks.map((t) => (
               <span key={t} className="absolute top-1.5 -translate-x-1/2" style={{ left: `${pct(t)}%` }}>
                 {t}
@@ -54,15 +54,15 @@ export function TraceWaterfall() {
             {ticks.map((t) => (
               <span
                 key={t}
-                className="absolute inset-y-0 w-px bg-paper-faint/25"
+                className="absolute inset-y-0 w-px bg-fg-faint/25"
                 style={{ left: `${pct(t)}%` }}
               />
             ))}
             <span
-              className="absolute inset-y-[-8px] w-px bg-phosphor/70"
-              style={{ left: `${pct(now)}%`, boxShadow: "0 0 12px rgba(255,181,71,0.7)" }}
+              className="absolute inset-y-[-8px] w-px bg-signal/70"
+              style={{ left: `${pct(now)}%` }}
             >
-              <span className="absolute -top-[18px] left-1/2 -translate-x-1/2 font-trace text-[9px] uppercase tracking-[1px] text-phosphor">
+              <span className="absolute -top-[18px] left-1/2 -translate-x-1/2 font-data text-[9px] text-signal">
                 now
               </span>
             </span>
@@ -112,10 +112,10 @@ function SpanRow({
   const before = !inside && left + width > 62;
 
   const barColor = span.highlight
-    ? "bg-phosphor"
+    ? "bg-signal"
     : span.depth === 0
-      ? "bg-paper-soft"
-      : "bg-paper-soft/35";
+      ? "bg-fg-soft"
+      : "bg-fg-soft/35";
 
   const Row = span.href ? "a" : "div";
 
@@ -129,12 +129,12 @@ function SpanRow({
       } ${span.href ? "cursor-pointer hover:bg-white/[0.025]" : ""}`}
     >
       <div
-        className="flex min-w-0 items-center gap-2 font-trace text-[11px] md:text-[12px]"
+        className="flex min-w-0 items-center gap-2 font-data text-[11px] md:text-[12px]"
         style={{ paddingLeft: span.depth * 12 }}
       >
-        {span.depth > 0 && <span className="text-paper-faint">└</span>}
-        <span className="hidden text-paper-dim md:inline">{span.service}</span>
-        <span className={`truncate ${span.highlight ? "text-phosphor-soft" : "text-paper-body"}`}>
+        {span.depth > 0 && <span className="text-fg-dim">└</span>}
+        <span className="hidden text-fg-dim md:inline">{span.service}</span>
+        <span className={`truncate ${span.highlight ? "text-signal-soft" : "text-fg-body"}`}>
           {span.op}
         </span>
       </div>
@@ -147,7 +147,6 @@ function SpanRow({
             left: `${left}%`,
             width: `${width}%`,
             transformOrigin: "left center",
-            boxShadow: span.highlight ? "0 0 16px -2px rgba(255,181,71,0.7)" : undefined,
           }}
           initial={reduced ? false : { scaleX: 0, opacity: 0 }}
           animate={{ scaleX: 1, opacity: 1 }}
@@ -155,22 +154,22 @@ function SpanRow({
         />
         {open && (
           <span
-            className="span-live absolute top-[2px] h-[14px] w-[3px] rounded-[1px] bg-phosphor"
+            className="span-live absolute top-[2px] h-[14px] w-[3px] rounded-[1px] bg-signal"
             style={{ left: `calc(${left + width}% - 3px)` }}
           />
         )}
         <motion.span
-          className={`absolute top-1/2 -translate-y-1/2 whitespace-nowrap font-trace text-[10px] md:text-[10.5px] ${
+          className={`absolute inset-y-0 flex items-center whitespace-nowrap font-data text-[10px] md:text-[10.5px] ${
             // narrow screens: keep only outcome notes outside the bars
-            !inside && !span.highlight ? "hidden md:block" : ""
+            !inside && !span.highlight ? "hidden md:flex" : ""
           } ${
             inside
               ? span.depth === 0
                 ? "text-night"
-                : "text-paper-hi"
+                : "text-fg-hi"
               : span.highlight
-                ? "text-phosphor"
-                : "text-paper-dim"
+                ? "text-signal"
+                : "text-fg-dim"
           }`}
           style={
             inside

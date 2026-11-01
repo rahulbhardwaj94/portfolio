@@ -23,7 +23,7 @@ export function ProjectCard({
 
   return (
     <article
-      className={`border-b border-paper-faint/40 transition-colors ${
+      className={`border-b border-fg-faint/40 transition-colors ${
         open ? "bg-white/[0.02]" : "hover:bg-white/[0.012]"
       }`}
     >
@@ -34,21 +34,21 @@ export function ProjectCard({
         className="grid w-full grid-cols-[18px_1fr_auto] items-center gap-3 px-3 py-5 text-left md:grid-cols-[18px_200px_1fr_auto] md:gap-6 md:px-5"
       >
         <span
-          className={`font-trace text-[12px] text-paper-dim transition-transform duration-300 ${
-            open ? "rotate-90 text-phosphor" : ""
+          className={`font-data text-[12px] text-fg-dim transition-transform duration-300 ${
+            open ? "rotate-90 text-signal" : ""
           }`}
         >
           ▸
         </span>
         <span className="flex items-baseline gap-3">
-          <span className={`font-serif text-[26px] leading-none md:text-[30px] ${open ? "text-phosphor" : "text-paper-hi"}`}>
+          <span className={`font-display text-[26px] leading-none md:text-[30px] ${open ? "text-signal" : "text-fg-hi"}`}>
             {project.name}
           </span>
         </span>
-        <span className="hidden truncate font-trace text-[11.5px] uppercase tracking-[1.5px] text-paper-dim md:block">
+        <span className="hidden truncate font-data text-[11.5px] text-fg-dim md:block">
           {project.eyebrow}
         </span>
-        <span className="flex items-center gap-2 font-trace text-[11px] text-paper-dim">
+        <span className="flex items-center gap-2 font-data text-[11px] text-fg-dim">
           <span className="hidden sm:inline">span {spanId}</span>
           <span className="rounded-[3px] border border-ok/40 px-1.5 py-[1px] text-ok">OK</span>
         </span>
@@ -67,7 +67,7 @@ export function ProjectCard({
             <div className="grid gap-6 px-3 pb-7 md:grid-cols-[218px_1fr] md:gap-6 md:px-5">
               <div className="hidden md:block" />
               <div>
-                <p className="max-w-[640px] text-[16px] font-light leading-[1.65] text-paper-body">
+                <p className="max-w-[640px] text-[16px] font-light leading-[1.65] text-fg-body">
                   {project.blurb}
                 </p>
 
@@ -75,8 +75,8 @@ export function ProjectCard({
                   <div className="mt-6 flex flex-wrap gap-8">
                     {featuredHighlights.map((h) => (
                       <div key={h.label}>
-                        <div className="font-serif text-[34px] leading-none text-paper-hi">{h.value}</div>
-                        <div className="mt-1.5 font-trace text-[10.5px] uppercase tracking-[1.5px] text-paper-dim">
+                        <div className="font-display text-[34px] leading-none text-fg-hi">{h.value}</div>
+                        <div className="mt-1.5 font-data text-[10.5px] text-fg-dim">
                           {h.label}
                         </div>
                       </div>
@@ -84,32 +84,32 @@ export function ProjectCard({
                   </div>
                 )}
 
-                <dl className="mt-6 grid max-w-[640px] grid-cols-[110px_1fr] gap-x-4 gap-y-1.5 font-trace text-[12px]">
-                  <dt className="text-paper-dim">kind</dt>
-                  <dd className="text-paper-body">{project.eyebrow.toLowerCase()}</dd>
-                  <dt className="text-paper-dim">stack</dt>
-                  <dd className="text-paper-body">{project.tags.join(" · ")}</dd>
+                <dl className="mt-6 grid max-w-[640px] grid-cols-[110px_1fr] gap-x-4 gap-y-1.5 font-data text-[12px]">
+                  <dt className="text-fg-dim">kind</dt>
+                  <dd className="text-fg-body">{project.eyebrow.toLowerCase()}</dd>
+                  <dt className="text-fg-dim">stack</dt>
+                  <dd className="text-fg-body">{project.tags.join(" · ")}</dd>
                   {project.detail && (
                     <>
-                      <dt className="text-paper-dim">guarantee</dt>
-                      <dd className="text-phosphor-soft">{project.detail}</dd>
+                      <dt className="text-fg-dim">guarantee</dt>
+                      <dd className="text-signal-soft">{project.detail}</dd>
                     </>
                   )}
                   {project.metric && (
                     <>
-                      <dt className="text-paper-dim">{project.metric.label}</dt>
-                      <dd className="text-phosphor-soft">{project.metric.value}</dd>
+                      <dt className="text-fg-dim">{project.metric.label}</dt>
+                      <dd className="text-signal-soft">{project.metric.value}</dd>
                     </>
                   )}
                   {project.links.github && (
                     <>
-                      <dt className="text-paper-dim">source</dt>
+                      <dt className="text-fg-dim">source</dt>
                       <dd>
                         <a
                           href={project.links.github}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-phosphor underline decoration-phosphor/30 underline-offset-4 transition-colors hover:decoration-phosphor"
+                          className="text-signal underline decoration-signal/30 underline-offset-4 transition-colors hover:decoration-signal"
                         >
                           github.com/rahulbhardwaj94/{project.slug} ↗
                         </a>

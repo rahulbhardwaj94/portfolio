@@ -15,18 +15,30 @@ const config: Config = {
         plex: ["var(--font-plex)", "system-ui", "sans-serif"],
         plexmono: ["var(--font-plex-mono)", "ui-monospace", "monospace"],
         grotesk: ["var(--font-grotesk)", "system-ui", "sans-serif"],
-        // Flight Recorder theme
-        serif: ["var(--font-serif)", "ui-serif", "Georgia", "serif"],
-        trace: ["var(--font-trace)", "ui-monospace", "monospace"],
+        // Homepage theme (see [data-theme] blocks in globals.css)
+        display: ["var(--t-font-display)", "system-ui", "sans-serif"],
+        body: ["var(--t-font-body)", "system-ui", "sans-serif"],
+        data: ["var(--t-font-data)", "ui-monospace", "monospace"],
       },
       colors: {
         // Homepage (design spec) tokens
-        night: "#0b0a08",
-        // Flight Recorder theme: warm paper ink on off-black, amber phosphor accent
-        phosphor: { DEFAULT: "#ffb547", soft: "#ffd08a", deep: "#c9822a" },
-        paper: { hi: "#f3ecdd", body: "#d9d1c0", soft: "#a39b8a", dim: "#7a7366", faint: "#4d483f" },
-        ok: "#9fcf7a",
-        sev: "#ff7a59",
+        // Homepage theme tokens — channel triplets set per [data-theme] in globals.css
+        night: "rgb(var(--t-bg) / <alpha-value>)",
+        surface: "rgb(var(--t-surface) / <alpha-value>)",
+        signal: {
+          DEFAULT: "rgb(var(--t-signal) / <alpha-value>)",
+          soft: "rgb(var(--t-signal-soft) / <alpha-value>)",
+          ink: "rgb(var(--t-signal-ink) / <alpha-value>)",
+        },
+        fg: {
+          hi: "rgb(var(--t-fg-hi) / <alpha-value>)",
+          body: "rgb(var(--t-fg-body) / <alpha-value>)",
+          soft: "rgb(var(--t-fg-soft) / <alpha-value>)",
+          dim: "rgb(var(--t-fg-dim) / <alpha-value>)",
+          faint: "rgb(var(--t-fg-faint) / <alpha-value>)",
+        },
+        ok: "rgb(var(--t-ok) / <alpha-value>)",
+        sev: "rgb(var(--t-sev) / <alpha-value>)",
         cyan: "#00d4ff",
         violet: "#a855f7",
         ink: {

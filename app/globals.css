@@ -1687,80 +1687,99 @@ html.sudo .ln-good { background: rgba(0, 255, 65, 0.07); }
    Case-study pages keep using the legacy classes above.
    ============================================================ */
 
+/* ============================================================
+   Homepage themes. Colours are "r g b" channel triplets so Tailwind
+   can apply alpha (see tailwind.config.ts). Fonts reference the
+   next/font variables set on <html> in app/layout.tsx.
+   ============================================================ */
+
+/* Monograph: warm paper, upright Newsreader display, IBM Plex Mono for data,
+   and one signal colour — the international orange of a flight recorder. */
+[data-theme="monograph"] {
+  --t-bg: 246 243 237;
+  --t-surface: 255 255 255;
+  --t-fg-hi: 24 22 20;
+  --t-fg-body: 54 52 48;
+  --t-fg-soft: 98 95 89;
+  --t-fg-dim: 134 130 122;
+  --t-fg-faint: 204 199 190;
+  --t-signal: 214 70 22;
+  --t-signal-soft: 180 56 14;
+  --t-signal-ink: 255 255 255;
+  --t-ok: 40 128 70;
+  --t-sev: 200 60 30;
+  --t-font-display: var(--font-newsreader);
+  --t-font-body: var(--font-schibsted);
+  --t-font-data: var(--font-plex-mono);
+  --t-display-weight: 400;
+  --t-display-tracking: -0.025em;
+  color-scheme: light;
+}
+
+.font-display {
+  font-weight: var(--t-display-weight);
+  letter-spacing: var(--t-display-tracking);
+}
+
 @layer components {
   .home-eyebrow {
-    @apply font-trace text-[11px] uppercase tracking-[2.5px] text-phosphor;
+    @apply font-data text-[12px] text-fg-dim;
   }
 
   .tag-pill {
-    @apply font-trace text-[11px] px-2 py-[3px] rounded-[4px] border border-paper-faint/60 text-paper-soft h-fit;
+    @apply font-data text-[11px] px-2 py-[3px] rounded-[4px] border border-fg-faint text-fg-soft h-fit;
   }
 
   .skill-pill {
-    @apply font-trace text-[12px] px-3 py-1.5 rounded-[4px] border border-paper-faint/60 text-paper-body bg-white/[0.015];
+    @apply font-data text-[12px] px-3 py-1.5 rounded-[4px] border border-fg-faint text-fg-body;
   }
 
   .skill-pill-accent {
-    @apply border-phosphor/30 text-phosphor-soft bg-phosphor/[0.05];
+    @apply border-signal/40 text-signal-soft;
   }
 
   .panel {
-    @apply relative rounded-[10px] border border-paper-faint/50;
-    background: linear-gradient(180deg, rgba(243, 236, 221, 0.025), rgba(243, 236, 221, 0.008));
+    @apply relative rounded-[8px] border border-fg-faint bg-surface/60;
   }
 
-  .btn-phosphor {
-    @apply inline-flex items-center gap-2.5 rounded-[6px] px-6 py-3 font-trace text-[13px] font-medium uppercase tracking-[1.5px] text-[#1a1206] transition-[box-shadow,transform] duration-300;
-    background: #ffb547;
-    box-shadow: 0 0 0 1px rgba(255, 181, 71, 0.5), 0 10px 40px -14px rgba(255, 181, 71, 0.7);
-  }
-  .btn-phosphor:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 0 0 1px rgba(255, 208, 138, 0.8), 0 14px 50px -12px rgba(255, 181, 71, 0.85);
+  .btn-signal {
+    @apply inline-flex items-center gap-2.5 rounded-[6px] bg-signal px-5 py-3 text-[15px] font-medium text-signal-ink transition-[background-color,transform] duration-200 hover:-translate-y-px hover:bg-signal-soft;
   }
 
   .btn-ghost {
-    @apply inline-flex items-center gap-2.5 rounded-[6px] border border-paper-faint px-6 py-3 font-trace text-[13px] uppercase tracking-[1.5px] text-paper-body transition-colors hover:border-paper-soft hover:text-paper-hi;
+    @apply inline-flex items-center gap-2.5 rounded-[6px] border border-fg-faint px-5 py-3 text-[15px] font-medium text-fg-body transition-colors hover:border-fg-dim hover:text-fg-hi;
   }
 }
 
-/* Warm wash behind the homepage — a faint amber glow on off-black */
 .home-wash {
-  background:
-    radial-gradient(1000px 640px at 78% -10%, rgba(255, 181, 71, 0.07), transparent 60%),
-    radial-gradient(1100px 800px at 10% 110%, rgba(255, 181, 71, 0.03), transparent 60%),
-    linear-gradient(180deg, #0d0c0a 0%, #0b0a08 50%, #090806 100%);
+  background: rgb(var(--t-bg));
+}
+
+/* Match the page canvas so overscroll bounce doesn't flash the dark legacy bg */
+html:has([data-theme="monograph"]),
+html:has([data-theme="monograph"]) body {
+  background: rgb(246 243 237);
 }
 
 .home-vignette {
-  background: radial-gradient(120% 120% at 50% 40%, transparent 55%, rgba(0, 0, 0, 0.6) 100%);
+  display: none;
 }
 
-/* Film grain: static SVG noise, blended over everything */
-.grain {
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 0.95  0 0 0 0 0.85  0 0 0 0.55 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
-  opacity: 0.07;
-  mix-blend-mode: overlay;
+/* CSS-only entrance so hero text never waits on hydration */
+@keyframes rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: none; }
 }
-
-/* Faint horizontal scanlines, like a phosphor CRT */
-.scanlines {
-  background: repeating-linear-gradient(
-    0deg,
-    rgba(255, 255, 255, 0.012) 0px,
-    rgba(255, 255, 255, 0.012) 1px,
-    transparent 1px,
-    transparent 3px
-  );
+.rise {
+  animation: rise 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
-
-.phosphor-glow {
-  text-shadow: 0 0 18px rgba(255, 181, 71, 0.35);
+@media (prefers-reduced-motion: reduce) {
+  .rise { animation: none; }
 }
 
 @keyframes span-pulse {
-  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(255, 181, 71, 0.6); }
-  50% { opacity: 0.6; box-shadow: 0 0 0 5px rgba(255, 181, 71, 0); }
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
 }
 .span-live {
   animation: span-pulse 1.8s ease-in-out infinite;
@@ -1770,7 +1789,7 @@ html.sudo .ln-good { background: rgba(0, 255, 65, 0.07); }
   .span-live { animation: none; }
 }
 
-::selection {
-  background: rgba(255, 181, 71, 0.28);
-  color: #f3ecdd;
+[data-theme] ::selection {
+  background: rgb(var(--t-signal) / 0.25);
+  color: rgb(var(--t-fg-hi));
 }

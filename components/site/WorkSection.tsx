@@ -19,11 +19,11 @@ export function WorkSection() {
         <div className="mb-10 flex flex-wrap items-end justify-between gap-6">
           <div>
             <div className="home-eyebrow mb-4">01 — Spans</div>
-            <h2 className="font-serif text-[44px] leading-[1] text-paper-hi md:text-[64px]">
-              Infrastructure for <em className="text-phosphor">agents</em>.
+            <h2 className="font-display text-[44px] leading-[1] text-fg-hi md:text-[64px]">
+              Infrastructure for agents.
             </h2>
           </div>
-          <p className="m-0 max-w-[360px] text-[15px] font-light leading-[1.6] text-paper-soft">
+          <p className="m-0 max-w-[360px] text-[15px] font-light leading-[1.6] text-fg-soft">
             Open-source orchestration, evaluation, memory, and governance. Expand a span to
             read its attributes.
           </p>
@@ -32,7 +32,7 @@ export function WorkSection() {
 
       <Reveal delay={0.08}>
         <div className="panel overflow-hidden">
-          <div className="hidden grid-cols-[18px_200px_1fr_auto] gap-6 border-b border-paper-faint/50 px-5 py-2.5 font-trace text-[10px] uppercase tracking-[1.5px] text-paper-faint md:grid">
+          <div className="hidden grid-cols-[18px_200px_1fr_auto] gap-6 border-b border-fg-faint/50 px-5 py-2.5 font-data text-[10px] text-fg-dim md:grid">
             <span />
             <span>service</span>
             <span>kind</span>

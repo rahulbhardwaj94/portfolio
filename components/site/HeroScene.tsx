@@ -7,7 +7,7 @@ import * as THREE from "three";
 /**
  * Three.js hero backdrop: a deep field of thin horizontal "spans" drifting
  * left-to-right at different depths — telemetry streaming past, in warm
- * paper-white with a few amber outliers. Deliberately quiet so the trace
+ * fg-white with a few amber outliers. Deliberately quiet so the trace
  * waterfall and headline stay the focus.
  *
  * - devicePixelRatio capped at 2
@@ -17,6 +17,13 @@ import * as THREE from "three";
 
 const SPAN_COUNT = 140;
 const FIELD_W = 30;
+
+/** Reads a "--t-*" channel triplet ("r g b") from the active theme as a CSS colour. */
+function themeColor(name: string, fallback: string) {
+  if (typeof window === "undefined") return fallback;
+  const v = getComputedStyle(document.querySelector("[data-theme]") ?? document.documentElement).getPropertyValue(name).trim();
+  return v ? `rgb(${v.split(/\s+/).join(",")})` : fallback;
+}
 
 type SpanSeed = { x: number; y: number; z: number; len: number; speed: number; amber: boolean };
 
@@ -45,8 +52,8 @@ function SpanField({ mouse }: { mouse: React.MutableRefObject<{ x: number; y: nu
   useEffect(() => {
     const m = mesh.current;
     if (!m) return;
-    const paper = new THREE.Color("#e9e0cc");
-    const amber = new THREE.Color("#ffb547");
+    const paper = new THREE.Color(themeColor("--t-fg-hi", "#e9e0cc"));
+    const amber = new THREE.Color(themeColor("--t-signal", "#ffb547"));
     seeds.forEach((s, i) => m.setColorAt(i, s.amber ? amber : paper));
     if (m.instanceColor) m.instanceColor.needsUpdate = true;
   }, [seeds]);
@@ -74,7 +81,7 @@ function SpanField({ mouse }: { mouse: React.MutableRefObject<{ x: number; y: nu
     <group ref={group}>
       <instancedMesh ref={mesh} args={[undefined, undefined, SPAN_COUNT]}>
         <boxGeometry args={[1, 0.045, 0.02]} />
-        <meshBasicMaterial transparent opacity={0.55} depthWrite={false} toneMapped={false} />
+        <meshBasicMaterial transparent opacity={0.3} depthWrite={false} toneMapped={false} />
       </instancedMesh>
     </group>
   );
@@ -111,9 +118,9 @@ export function HeroScene() {
       className="absolute inset-0 -z-10"
       style={{
         maskImage:
-          "radial-gradient(ellipse 80% 70% at 70% 35%, #000 20%, transparent 75%)",
+          "radial-gradient(ellipse 38% 32% at 88% 18%, #000 10%, transparent 100%)",
         WebkitMaskImage:
-          "radial-gradient(ellipse 80% 70% at 70% 35%, #000 20%, transparent 75%)",
+          "radial-gradient(ellipse 38% 32% at 88% 18%, #000 10%, transparent 100%)",
       }}
     >
       <Canvas
@@ -122,7 +129,7 @@ export function HeroScene() {
         gl={{ alpha: true, antialias: true }}
         frameloop={reduced ? "demand" : active ? "always" : "never"}
       >
-        <fog attach="fog" args={["#0b0a08", 6, 22]} />
+        <fog attach="fog" args={[themeColor("--t-bg", "#0b0a08"), 6, 22]} />
         <SpanField mouse={mouse} />
       </Canvas>
     </div>

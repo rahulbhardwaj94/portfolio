@@ -10,7 +10,7 @@ export function AboutSection() {
       <div className="grid grid-cols-1 items-start gap-10 md:grid-cols-[1fr_1fr] md:gap-20">
         <Reveal>
           <div className="home-eyebrow mb-4">{about.eyebrow}</div>
-          <h2 className="font-serif text-[40px] leading-[1.05] text-paper-hi md:text-[56px]">
+          <h2 className="font-display text-[40px] leading-[1.05] text-fg-hi md:text-[56px]">
             {about.heading}
           </h2>
         </Reveal>
@@ -18,16 +18,12 @@ export function AboutSection() {
           {about.paragraphs.map((p, i) => (
             <p
               key={i}
-              className={`text-[17px] font-light leading-[1.75] text-paper-soft ${
-                i === 0
-                  ? "first-letter:float-left first-letter:mr-2 first-letter:font-serif first-letter:text-[56px] first-letter:leading-[0.85] first-letter:text-phosphor"
-                  : "mt-5"
-              }`}
+              className={`text-[17px] font-light leading-[1.75] text-fg-soft ${i > 0 ? "mt-5" : ""}`}
             >
               {p}
             </p>
           ))}
-          <div className="mt-8 font-trace text-[10.5px] uppercase tracking-[1.5px] text-paper-faint">
+          <div className="mt-8 font-data text-[10.5px] text-fg-dim">
             span.attributes
           </div>
           <div className="mt-3 flex flex-wrap gap-2">
